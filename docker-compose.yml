@@ -1,0 +1,17 @@
+---
+#docker compose file for dev env setup
+version: '3'
+services:
+  postgres:
+    container_name: postgresdb
+    image: postgres:14
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+
+volumes:
+  postgresdb:
+    external: false
