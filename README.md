@@ -33,3 +33,10 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Set up dev env on docker with docker-compose
+
+```bash
+# pull docker image or start instant
+$ docker-compose up
+```
