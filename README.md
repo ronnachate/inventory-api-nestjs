@@ -1,6 +1,6 @@
 ## Description
 
-Inventory Rest api version with [Nest]
+Inventory Rest api version with Nest, and TypeORM
 
 ## Installation
 
