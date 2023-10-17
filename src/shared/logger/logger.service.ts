@@ -1,6 +1,7 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { createLogger, Logger, transports, format } from 'winston';
 import DailyRotateFile = require("winston-daily-rotate-file");
+import * as dotenv from 'dotenv';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -13,12 +14,11 @@ export class LoggerService {
     }
 
     constructor() {
-        const logDir = "/Users/ronnachate/nest/logs"; //this.configService.get<string>('logDir');
-        console.log('log here');
-        console.log(logDir);
+        dotenv.config();
+        const logDir = process.env.LOG_DIR;
         const dailyRotateFileTransport = new DailyRotateFile({
             filename: `${logDir}/%DATE%.log`,
-            maxSize: "1g",
+            maxSize: "200m",
             maxFiles: "3d",
             zippedArchive: true,
             datePattern: 'YYYY-MM-DD'
