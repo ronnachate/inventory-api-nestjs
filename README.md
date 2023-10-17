@@ -34,9 +34,17 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+
 ## Set up dev env on docker with docker-compose
 
 ```bash
 # pull docker image or start instant
 $ docker-compose up
+```
+
+## Database migrate
+
+```bash
+# apply migration in /migrations directory to DB
+$ npm run migration:run
 ```
