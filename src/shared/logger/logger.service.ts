@@ -1,5 +1,4 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger, transports, format } from 'winston';
 import DailyRotateFile = require("winston-daily-rotate-file");
 
@@ -13,8 +12,10 @@ export class LoggerService {
         this.context = context;
     }
 
-    constructor(private configService: ConfigService) {
-        const logDir = this.configService.get<string>('logDir');
+    constructor() {
+        const logDir = "/Users/ronnachate/nest/logs"; //this.configService.get<string>('logDir');
+        console.log('log here');
+        console.log(logDir);
         const dailyRotateFileTransport = new DailyRotateFile({
             filename: `${logDir}/%DATE%.log`,
             maxSize: "1g",

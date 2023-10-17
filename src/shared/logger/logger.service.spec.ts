@@ -3,6 +3,6 @@ import { LoggerService } from './logger.service';
 
 describe('LoggerService', () => {
   it('should be defined', () => {
-    expect(new LoggerService(new ConfigService)).toBeDefined();
+    expect(new LoggerService()).toBeDefined();
   });
 });
