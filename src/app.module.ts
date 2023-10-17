@@ -4,12 +4,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import configuration from './shared//config/appconfig';
 
-import typeOrmConfig from '../ormconfig';
+import typeOrmConfig from './shared/config/ormconfig';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
     TypeOrmModule.forRoot(typeOrmConfig) ,
     UserModule
   ],
