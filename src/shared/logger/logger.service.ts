@@ -23,7 +23,7 @@ export class LoggerService {
             zippedArchive: true,
             datePattern: 'YYYY-MM-DD'
         });
-        const logger = createLogger({
+        this.logger = createLogger({
             transports: [
                 dailyRotateFileTransport
             ],
@@ -34,7 +34,7 @@ export class LoggerService {
         // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
         //
         if (process.env.NODE_ENV !== 'production') {
-            logger.add(new transports.Console({
+            this.logger.add(new transports.Console({
                 format: format.simple(),
             }));
         }
