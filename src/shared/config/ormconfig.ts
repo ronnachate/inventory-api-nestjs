@@ -9,8 +9,8 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
-  entities: ['/Users/ronnachate/git/inventory-api-nestjs/src/**/entities/*.entity{.ts,.js}'],
-  migrations: ['/Users/ronnachate/git/inventory-api-nestjs/migrations/*{.ts,.js}'],
+  entities: [__dirname + '/../../**/entities/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../../../migrations/*{.ts,.js}'],
   migrationsRun: false,
   synchronize: false,
 };
