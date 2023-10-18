@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsNumber, IsOptional, Min } from 'class-validator';
-import { BasePaginationParams } from 'src/shared/query-parameter/base-pagination-params';
+import { BasePaginationParams } from '../../shared/query-parameter/base-pagination-params';
 
 export class UserPaginationParams extends BasePaginationParams {
     @IsNumber()

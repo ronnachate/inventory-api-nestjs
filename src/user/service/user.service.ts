@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { LoggerService } from 'src/shared/logger/logger.service';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { LoggerService } from '../../shared/logger/logger.service';
+import { UserRepository } from '../repositories/user.repository';
 import { plainToInstance } from 'class-transformer';
-import { UserDTO } from 'src/user/dtos/user.dto';
+import { UserDTO } from '../dtos/user.dto';
 import { Equal, Not } from 'typeorm';
-import { USER_DELETED_STATUS } from 'src/shared/constant/generic';
+import { USER_DELETED_STATUS } from '../../shared/constant/generic';
 
 @Injectable()
 export class UserService {

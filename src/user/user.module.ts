@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SharedModule } from '../shared/shared.module';
 import { UserController } from './controller/user.controller';
-import { UserService } from './service/user/user.service';
+import { UserService } from './service/user.service';
 import { UserRepository } from './repositories/user.repository';
 import { User } from './entities/user.entity';
 import { UserStatus } from './entities/user.status.entity';

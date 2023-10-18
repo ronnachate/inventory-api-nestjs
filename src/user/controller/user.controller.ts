@@ -6,12 +6,12 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { LoggerService } from 'src/shared/logger/logger.service';
-import { UserService } from '../service/user/user.service';
+import { LoggerService } from '../../shared/logger/logger.service';
+import { UserService } from '../service/user.service';
 import { UserDTO } from '../dtos/user.dto';
 import { UserPaginationParams } from '../query-params/pagination-params';
-import { PaginationResultset } from 'src/shared/dtos/pagination-resultset';
-import { INTERNAL_SERVER_ERROR_MSG } from 'src/shared/constant/generic';
+import { PaginationResultset } from '../../shared/dtos/pagination-resultset';
+import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 
 @Controller('users')
 export class UserController {
