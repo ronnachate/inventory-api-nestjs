@@ -3,6 +3,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   Query,
 } from '@nestjs/common';
@@ -36,7 +37,7 @@ export class UserController {
 
       return { items: users, pagination: { page, rows, count } };
     } catch (error) {
-      this.logger.error("getUsers error with", query);
+      this.logger.error('getUsers error with', query);
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -55,18 +56,30 @@ export class UserController {
     try {
       const user = await this.userService.getUserById(id);
       return user;
-    } catch (error) {
-      this.logger.error(`getUsers error with id "${id}"`, error);
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: INTERNAL_SERVER_ERROR_MSG,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        }
-      );
+    } catch (error: any) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+          {
+            cause: error,
+          }
+        );
+      } else {
+        this.logger.error(`getUsers error with id "${id}"`, error);
+        throw new HttpException(
+          {
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: INTERNAL_SERVER_ERROR_MSG,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          {
+            cause: error,
+          }
+        );
+      }
     }
   }
 }
