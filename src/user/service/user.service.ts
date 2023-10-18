@@ -18,7 +18,7 @@ export class UserService {
   async getUsers(
     page: number,
     rows: number,
-    status: number
+    status?: number
   ): Promise<{ users: UserDTO[]; count: number }> {
     let offset = (page - 1) * rows;
     let filters = {
