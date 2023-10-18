@@ -18,9 +18,6 @@ export class UserDTO {
   username: string;
 
   @Expose()
-  isAccountDisabled: boolean;
-
-  @Expose()
   createdAt: string;
 
   @Expose()
