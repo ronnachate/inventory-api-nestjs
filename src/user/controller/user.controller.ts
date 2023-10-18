@@ -19,7 +19,7 @@ export class UserController {
     @Query() query: UserPaginationParams
   ): Promise<PaginationResultset<UserDTO[]>> {
     const { page = 1, rows = 10 } = query;
-    const { users, count } = await this.userService.getUsers(page, rows);
+    const { users, count } = await this.userService.getUsers(page, rows, query.status);
 
     return { items: users, pagination: { page, rows, count } };
   }

@@ -3,7 +3,7 @@ import { LoggerService } from 'src/shared/logger/logger.service';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from 'src/user/dtos/user.dto';
-import { Not } from 'typeorm';
+import { Equal, Not } from 'typeorm';
 import { USER_DELETED_STATUS } from 'src/shared/constant/generic';
 
 @Injectable()
@@ -17,14 +17,19 @@ export class UserService {
 
   async getUsers(
     page: number,
-    rows: number
+    rows: number,
+    status: number
   ): Promise<{ users: UserDTO[]; count: number }> {
     let offset = (page - 1) * rows;
-    const [users, count] = await this.repository.findAndCount({
+    let filters = {
       where: { status: Not(USER_DELETED_STATUS) },
       take: rows,
       skip: offset,
-    });
+    };
+    if (status) {
+      filters.where.status = Equal(status);
+    }
+    const [users, count] = await this.repository.findAndCount(filters);
 
     const usersOutput = plainToInstance(UserDTO, users, {
       excludeExtraneousValues: true,
