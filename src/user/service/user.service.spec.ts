@@ -50,12 +50,12 @@ describe('UserService', () => {
     const page = 1;
     const rows = 10;
     mockedRepository.findAndCount.mockResolvedValue([[user3, user4], 2]);
-    it('gets users as a list', async () => {
+    it('should return users as a list', async () => {
       await service.getUsers(page, rows);
       expect(mockedRepository.findAndCount).toHaveBeenCalled();
     });
 
-    it('gets users should filter out deleted if no status defined', async () => {
+    it('should filter out deleted user if no status defined', async () => {
       await service.getUsers(page, rows);
       let offset = (page - 1) * rows;
       let expectedFilter = {
@@ -68,7 +68,7 @@ describe('UserService', () => {
       );
     });
 
-    it('gets users should filtering by status if status defined', async () => {
+    it('should filtering by status if status defined', async () => {
       let status = 1;
       await service.getUsers(page, rows, status);
       let offset = (page - 1) * rows;
