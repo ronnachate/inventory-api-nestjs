@@ -106,5 +106,32 @@ describe('UserController', () => {
       expect(await controller.getUser(user3.id)).toEqual(user3);
       expect(mockedUserService.getUserById).toHaveBeenCalledWith(user3.id);
     });
+
+    it('should thrown error with generic internal error msg', async () => {
+      mockedUserService.getUserById.mockRejectedValue(
+        new InternalServerErrorException()
+      );
+      try {
+        await controller.getUser(1);
+      } catch (error) {
+        expect(error.constructor).toBe(HttpException);
+        var errorResponse = error.response;
+        expect(errorResponse.status).toEqual(500);
+        expect(errorResponse.error).toEqual(INTERNAL_SERVER_ERROR_MSG);
+      }
+    });
+
+    it('should thrown error 404 when service thrown NotFoundException', async () => {
+      mockedUserService.getUserById.mockRejectedValue(
+        new NotFoundException()
+      );
+      try {
+        await controller.getUser(1);
+      } catch (error) {
+        expect(error.constructor).toBe(HttpException);
+        var errorResponse = error.response;
+        expect(errorResponse.status).toEqual(404);
+      }
+    });
   });
 });
