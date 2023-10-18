@@ -3,7 +3,11 @@ import { UserController } from './user.controller';
 import { UserService } from '../service/user.service';
 import { LoggerService } from '../../shared/logger/logger.service';
 import { UserPaginationParams } from '../query-params/pagination-params';
-import { HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common/exceptions';
+import {
+  HttpException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 
 describe('UserController', () => {
@@ -62,7 +66,7 @@ describe('UserController', () => {
       rows: rows,
       status: undefined,
     };
-  
+
     it('should call getUsers function', () => {
       mockedUserService.getUsers.mockResolvedValue({ users: [], count: 0 });
       controller.getUsers(query);
@@ -81,9 +85,11 @@ describe('UserController', () => {
     });
 
     it('should thrown error with generic internal error msg', async () => {
-      mockedUserService.getUsers.mockRejectedValue(new InternalServerErrorException());
+      mockedUserService.getUsers.mockRejectedValue(
+        new InternalServerErrorException()
+      );
       try {
-        await controller.getUsers(query)
+        await controller.getUsers(query);
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
@@ -91,15 +97,14 @@ describe('UserController', () => {
         expect(errorResponse.error).toEqual(INTERNAL_SERVER_ERROR_MSG);
       }
     });
+  });
 
-    describe('Get user by id', () => {
-      it('should return correct user', async () => {
-        const id = 1;
-        mockedUserService.getUserById.mockResolvedValue(user3);
+  describe('Get user by id', () => {
+    it('should return correct user', async () => {
+      mockedUserService.getUserById.mockResolvedValue(user3);
 
-        expect(await controller.getUser(user3.id)).toEqual(user3);
-        expect(mockedUserService.getUserById).toHaveBeenCalledWith(user3.id);
-      });
+      expect(await controller.getUser(user3.id)).toEqual(user3);
+      expect(mockedUserService.getUserById).toHaveBeenCalledWith(user3.id);
     });
   });
 });
