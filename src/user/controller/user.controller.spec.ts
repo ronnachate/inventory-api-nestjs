@@ -3,8 +3,8 @@ import { UserController } from './user.controller';
 import { UserService } from '../service/user.service';
 import { LoggerService } from '../../shared/logger/logger.service';
 import { UserPaginationParams } from '../query-params/pagination-params';
-import { PaginationResultset } from 'src/shared/dtos/pagination-resultset';
-import { UserDTO } from '../dtos/user.dto';
+import { HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common/exceptions';
+import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -12,7 +12,7 @@ describe('UserController', () => {
     getUsers: jest.fn(),
     getUserById: jest.fn(),
   };
-  const mockedLogger = { setContext: jest.fn(), log: jest.fn() };
+  const mockedLogger = { setContext: jest.fn(), error: jest.fn() };
 
   const currentDate = new Date();
   const user3 = {
@@ -54,26 +54,22 @@ describe('UserController', () => {
   });
 
   describe('get Users as a list', () => {
+    const page = 1;
+    const rows = 10;
+    const resultCount = 2;
+    const query: UserPaginationParams = {
+      page: page,
+      rows: rows,
+      status: undefined,
+    };
+  
     it('should call getUsers function', () => {
-      const query: UserPaginationParams = {
-        page: 1,
-        rows: 10,
-        status: undefined,
-      };
       mockedUserService.getUsers.mockResolvedValue({ users: [], count: 0 });
       controller.getUsers(query);
       expect(mockedUserService.getUsers).toHaveBeenCalled();
     });
 
     it('should return correct result', async () => {
-      const page = 1;
-      const rows = 10;
-      const resultCount = 2;
-      const query: UserPaginationParams = {
-        page: page,
-        rows: rows,
-        status: undefined,
-      };
       const pagination = { page: page, rows: rows, count: resultCount };
       mockedUserService.getUsers.mockResolvedValue({
         users: [user3, user4],
