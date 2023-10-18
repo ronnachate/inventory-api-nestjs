@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { UserRepository } from '../repositories/user.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
 import { NotFoundException } from '@nestjs/common';
+import { Equal, Not } from 'typeorm';
+import { USER_DELETED_STATUS } from '../../../src/shared/constant/generic';
 
 describe('UserService', () => {
   let service: UserService;
@@ -45,12 +47,35 @@ describe('UserService', () => {
   });
 
   describe('getUsers', () => {
+    const page = 1;
+    const rows = 10;
+    mockedRepository.findAndCount.mockResolvedValue([[user3, user4], 2]);
     it('gets users as a list', async () => {
-      const page = 1;
-      const rows = 10;
-      mockedRepository.findAndCount.mockResolvedValue([[user3, user4], 2]);
       await service.getUsers(page, rows);
       expect(mockedRepository.findAndCount).toHaveBeenCalled();
+    });
+    
+    it('gets users should filter out deleted if no status defined', async () => {
+      await service.getUsers(page, rows);
+      let offset = (page - 1) * rows;
+      let expectedFilter = {
+        where: { status: Not(USER_DELETED_STATUS) },
+        take: rows,
+        skip: offset,
+      };
+      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(expectedFilter);
+    });
+
+    it('gets users should filtering by status if status defined', async () => {
+      let status = 1;
+      await service.getUsers(page, rows, status);
+      let offset = (page - 1) * rows;
+      let expectedFilter = {
+        where: { status: Equal(status) },
+        take: rows,
+        skip: offset,
+      };
+      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(expectedFilter);
     });
   });
 
