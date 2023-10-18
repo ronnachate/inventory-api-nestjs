@@ -2,12 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserRepository } from '../repositories/user.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UserService', () => {
   let service: UserService;
 
   const mockedRepository = {
-    findOne: jest.fn(),
+    getById: jest.fn(),
     findAndCount: jest.fn(),
   };
 
@@ -52,4 +53,28 @@ describe('UserService', () => {
       expect(mockedRepository.findAndCount).toHaveBeenCalled();
     });
   });
+
+  describe('getUserById', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(mockedRepository, 'getById')
+        .mockImplementation(async () => user4);
+    });
+
+    it('should return correct user using given user id', async () => {
+      await service.getUserById(user4.id);
+      expect(mockedRepository.getById).toBeCalledWith(user4.id);
+    });
+
+    it('should return correct user user data using given user id', async () => {
+      const result = await service.getUserById(user4.id);
+
+      expect(result).toEqual({
+        id: user4.id,
+        name: user4.name,
+        username: user4.username,
+      });
+    });
+  });
+
 });
