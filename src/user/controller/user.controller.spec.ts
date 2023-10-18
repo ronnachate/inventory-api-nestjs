@@ -80,5 +80,15 @@ describe('UserController', () => {
       expect(result.items).toEqual([user3, user4]);
       expect(result.pagination).toEqual(pagination);
     });
+
+    describe('Get user by id', () => {
+      it('should return correct user', async () => {
+        const id = 1;
+        mockedUserService.getUserById.mockResolvedValue(user3);
+
+        expect(await controller.getUser(user3.id)).toEqual(user3);
+        expect(mockedUserService.getUserById).toHaveBeenCalledWith(user3.id);
+      });
+    });
   });
 });
