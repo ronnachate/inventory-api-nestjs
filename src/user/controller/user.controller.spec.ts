@@ -80,6 +80,18 @@ describe('UserController', () => {
       expect(result.pagination).toEqual(pagination);
     });
 
+    it('should thrown error with generic internal error msg', async () => {
+      mockedUserService.getUsers.mockRejectedValue(new InternalServerErrorException());
+      try {
+        await controller.getUsers(query)
+      } catch (error) {
+        expect(error.constructor).toBe(HttpException);
+        var errorResponse = error.response;
+        expect(errorResponse.status).toEqual(500);
+        expect(errorResponse.error).toEqual(INTERNAL_SERVER_ERROR_MSG);
+      }
+    });
+
     describe('Get user by id', () => {
       it('should return correct user', async () => {
         const id = 1;
