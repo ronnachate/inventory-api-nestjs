@@ -3,6 +3,7 @@ import { UserRepository } from './user.repository';
 import { DataSource } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UserStatus } from '../entities/user.status.entity';
+import { NotFoundException } from '@nestjs/common/exceptions';
 
 describe('UserRepository', () => {
   let repository: UserRepository;
@@ -59,7 +60,16 @@ describe('UserRepository', () => {
       jest
         .spyOn(repository, 'findOne')
         .mockImplementation(async () => expectedOutput);
-      expect(await repository.getById(1)).toEqual(expectedOutput);
+      expect(await repository.getById(id)).toEqual(expectedOutput);
+    });
+
+    it('should throw NotFoundError when no user found', async () => {
+      jest.spyOn(repository, 'findOne').mockResolvedValue(undefined);
+      try {
+        await repository.getById(id);
+      } catch (error) {
+        expect(error.constructor).toBe(NotFoundException);
+      }
     });
   });
 });
