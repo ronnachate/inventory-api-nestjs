@@ -11,6 +11,18 @@ describe('UserService', () => {
     findAndCount: jest.fn(),
   };
 
+  const user3 = {
+    id: 3,
+    username: 'user3',
+    name: 'User num3',
+  };
+
+  const user4 = {
+    id: 4,
+    username: 'user4',
+    name: 'User num4',
+  };
+
   beforeEach(async () => {
     const mockedLogger = { setContext: jest.fn(), log: jest.fn() };
     const module: TestingModule = await Test.createTestingModule({
@@ -29,5 +41,15 @@ describe('UserService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('getUsers', () => {
+    it('gets users as a list', async () => {
+      const page = 1;
+      const rows = 10;
+      mockedRepository.findAndCount.mockResolvedValue([[user3, user4], 2]);
+      await service.getUsers(page, rows);
+      expect(mockedRepository.findAndCount).toHaveBeenCalled();
+    });
   });
 });
