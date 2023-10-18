@@ -9,7 +9,10 @@ import { UserStatus } from './entities/user.status.entity';
 import { Permission } from './entities/permission.entity';
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([User, UserStatus, Permission])],
+  imports: [
+    SharedModule,
+    TypeOrmModule.forFeature([User, UserStatus, Permission]),
+  ],
   controllers: [UserController],
   providers: [UserService, UserRepository],
   exports: [UserService],

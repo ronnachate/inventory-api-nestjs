@@ -6,19 +6,18 @@ import { UserDTO } from 'src/user/dtos/user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        private repository: UserRepository,
-        private readonly logger: LoggerService,
-    ) {
-        this.logger.setContext(UserService.name);
-    }
+  constructor(
+    private repository: UserRepository,
+    private readonly logger: LoggerService
+  ) {
+    this.logger.setContext(UserService.name);
+  }
 
-    async getUserById(id: number): Promise<UserDTO> {
-        const user = await this.repository.getById(id);
-    
-        return plainToClass(UserDTO, user, {
-          excludeExtraneousValues: true,
-        });
-    }
-    
+  async getUserById(id: number): Promise<UserDTO> {
+    const user = await this.repository.getById(id);
+
+    return plainToClass(UserDTO, user, {
+      excludeExtraneousValues: true,
+    });
+  }
 }
