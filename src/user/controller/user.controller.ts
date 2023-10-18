@@ -13,7 +13,9 @@ import { UserDTO } from '../dtos/user.dto';
 import { UserPaginationParams } from '../query-params/pagination-params';
 import { PaginationResultset } from '../../shared/dtos/pagination-resultset';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(
@@ -24,6 +26,16 @@ export class UserController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get users with pagination',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: PaginationResultset<UserDTO[]>,
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+  })
   async getUsers(
     @Query() query: UserPaginationParams
   ): Promise<PaginationResultset<UserDTO[]>> {
@@ -52,6 +64,19 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get user by id',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+  })
   async getUser(@Param('id') id: number): Promise<UserDTO> {
     try {
       const user = await this.userService.getUserById(id);
