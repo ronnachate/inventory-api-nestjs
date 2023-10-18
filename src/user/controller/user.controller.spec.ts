@@ -23,7 +23,7 @@ describe('UserController', () => {
     lasname: 'lastname3',
     createdAt: currentDate.toISOString(),
     updatedAt: currentDate.toISOString(),
-    status: null
+    status: null,
   };
 
   const user4 = {
@@ -34,7 +34,7 @@ describe('UserController', () => {
     lasname: 'lastname4',
     createdAt: currentDate.toISOString(),
     updatedAt: currentDate.toISOString(),
-    status: null
+    status: null,
   };
 
   beforeEach(async () => {
@@ -58,7 +58,7 @@ describe('UserController', () => {
       const query: UserPaginationParams = {
         page: 1,
         rows: 10,
-        status: undefined
+        status: undefined,
       };
       mockedUserService.getUsers.mockResolvedValue({ users: [], count: 0 });
       controller.getUsers(query);
@@ -72,10 +72,13 @@ describe('UserController', () => {
       const query: UserPaginationParams = {
         page: page,
         rows: rows,
-        status: undefined
+        status: undefined,
       };
       const pagination = { page: page, rows: rows, count: resultCount };
-      mockedUserService.getUsers.mockResolvedValue({ users: [user3, user4], count: resultCount });
+      mockedUserService.getUsers.mockResolvedValue({
+        users: [user3, user4],
+        count: resultCount,
+      });
       var result = await controller.getUsers(query);
       expect(result.items).toEqual([user3, user4]);
       expect(result.pagination).toEqual(pagination);
