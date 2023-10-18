@@ -54,7 +54,7 @@ describe('UserService', () => {
       await service.getUsers(page, rows);
       expect(mockedRepository.findAndCount).toHaveBeenCalled();
     });
-    
+
     it('gets users should filter out deleted if no status defined', async () => {
       await service.getUsers(page, rows);
       let offset = (page - 1) * rows;
@@ -63,7 +63,9 @@ describe('UserService', () => {
         take: rows,
         skip: offset,
       };
-      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(expectedFilter);
+      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(
+        expectedFilter
+      );
     });
 
     it('gets users should filtering by status if status defined', async () => {
@@ -75,7 +77,9 @@ describe('UserService', () => {
         take: rows,
         skip: offset,
       };
-      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(expectedFilter);
+      expect(mockedRepository.findAndCount).toHaveBeenCalledWith(
+        expectedFilter
+      );
     });
   });
 
@@ -114,5 +118,4 @@ describe('UserService', () => {
       jest.resetAllMocks();
     });
   });
-
 });
