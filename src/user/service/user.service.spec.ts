@@ -84,6 +84,10 @@ describe('UserService', () => {
         expect(error.constructor).toBe(NotFoundException);
       }
     });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
   });
 
 });
