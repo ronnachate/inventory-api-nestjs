@@ -1,3 +1,3 @@
 export const APPLICATION_KEY_HEADER = 'application_key';
 
-export const USER_DELETE_STATUS = 3;
+export const USER_DELETED_STATUS = 3;

@@ -3,6 +3,8 @@ import { LoggerService } from 'src/shared/logger/logger.service';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from 'src/user/dtos/user.dto';
+import { Not } from 'typeorm';
+import { USER_DELETED_STATUS } from 'src/shared/constant/generic';
 
 @Injectable()
 export class UserService {
@@ -19,7 +21,7 @@ export class UserService {
   ): Promise<{ users: UserDTO[]; count: number }> {
     let offset = (page - 1) * rows;
     const [users, count] = await this.repository.findAndCount({
-      where: {},
+      where: { status: Not(USER_DELETED_STATUS) },
       take: rows,
       skip: offset,
     });
