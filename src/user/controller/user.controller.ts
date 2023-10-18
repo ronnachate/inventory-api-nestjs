@@ -1,7 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { LoggerService } from 'src/shared/logger/logger.service';
 import { UserService } from '../service/user/user.service';
 import { UserDTO } from '../dtos/user.dto';
+import { UserPaginationParams } from '../query-params/pagination-params';
+import { PaginationResultset } from 'src/shared/dtos/pagination-resultset';
 
 @Controller('users')
 export class UserController {
@@ -13,8 +15,13 @@ export class UserController {
   }
 
   @Get()
-  findAll(): string {
-    return 'return all users';
+  async getUsers(
+    @Query() query: UserPaginationParams
+  ): Promise<PaginationResultset<UserDTO[]>> {
+    const { page = 1, rows = 10 } = query;
+    const { users, count } = await this.userService.getUsers(page, rows);
+
+    return { items: users, pagination: { page, rows, count } };
   }
 
   @Get(':id')

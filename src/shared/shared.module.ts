@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { configModuleOptions } from './config/module.config'
+import { configModuleOptions } from './config/module.config';
 import { AppLoggerModule } from './logger/logger.module';
 
 @Module({
@@ -25,6 +25,6 @@ import { AppLoggerModule } from './logger/logger.module';
     }),
     AppLoggerModule,
   ],
-  exports: [AppLoggerModule, ConfigModule]
+  exports: [AppLoggerModule, ConfigModule],
 })
 export class SharedModule {}
