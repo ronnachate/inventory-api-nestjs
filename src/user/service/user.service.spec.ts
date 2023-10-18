@@ -75,6 +75,15 @@ describe('UserService', () => {
         username: user4.username,
       });
     });
+
+    it('throw not found exception if no user with given id found', async () => {
+      mockedRepository.getById.mockRejectedValue(new NotFoundException());
+      try {
+        await service.getUserById(5);
+      } catch (error) {
+        expect(error.constructor).toBe(NotFoundException);
+      }
+    });
   });
 
 });
