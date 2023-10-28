@@ -48,3 +48,7 @@ $ docker-compose up
 # apply migration in /migrations directory to DB
 $ npm run migration:run
 ```
+
+## OpenAPI documentation
+
+* request to /api
