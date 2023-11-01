@@ -9,12 +9,14 @@ import {
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
+import { CreateUserDTO } from '../dtos/create-user.dto';
 
 describe('UserController', () => {
   let controller: UserController;
   const mockedUserService = {
     getUsers: jest.fn(),
     getUserById: jest.fn(),
+    createUser: jest.fn(),
   };
   const mockedLogger = { setContext: jest.fn(), error: jest.fn() };
 
@@ -131,6 +133,33 @@ describe('UserController', () => {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
         expect(errorResponse.status).toEqual(404);
+      }
+    });
+  });
+
+  describe('Create user', () => {
+    const input = new CreateUserDTO();
+    it('Create user should return corect user', async () => {
+      const userDto = {
+        name: 'user5',
+        username: 'user5',
+      };
+      mockedUserService.createUser.mockResolvedValue(userDto);
+
+      expect(await controller.createUser(input)).toEqual(userDto);
+    });
+
+    it('should thrown error with generic internal error msg', async () => {
+      mockedUserService.createUser.mockRejectedValue(
+        new InternalServerErrorException()
+      );
+      try {
+        await controller.createUser(input);
+      } catch (error) {
+        expect(error.constructor).toBe(HttpException);
+        var errorResponse = error.response;
+        expect(errorResponse.status).toEqual(500);
+        expect(errorResponse.error).toEqual(INTERNAL_SERVER_ERROR_MSG);
       }
     });
   });
