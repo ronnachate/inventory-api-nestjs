@@ -17,7 +17,7 @@ export class UserDTO {
 
   @ApiProperty()
   @Expose()
-  lasname: string;
+  lastname: string;
 
   @ApiProperty()
   @Expose()
