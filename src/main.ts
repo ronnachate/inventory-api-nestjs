@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ApplicationKeyMiddleware } from './shared/middleware/application.key.middleware';
+import { BadRequestException } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 
 async function bootstrap() {
@@ -19,7 +20,14 @@ async function bootstrap() {
   app.use(ApplicationKeyMiddleware);
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: true,
+      exceptionFactory: (errors) => {
+        const result = errors.map((error) => ({
+          property: error.property,
+          message: error.constraints[Object.keys(error.constraints)[0]],
+        }));
+        return new BadRequestException(result);
+      },
+      stopAtFirstError: true,
     }),
   );
 
