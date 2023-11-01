@@ -1,11 +1,15 @@
 import {
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   NotFoundException,
   Param,
+  Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LoggerService } from '../../shared/logger/logger.service';
 import { UserService } from '../service/user.service';
@@ -14,9 +18,11 @@ import { UserPaginationParams } from '../query-params/pagination-params';
 import { PaginationResultset } from '../../shared/dtos/pagination-resultset';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserDTO } from '../dtos/create-user.dto';
 
 @ApiTags('users')
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -105,6 +111,39 @@ export class UserController {
           }
         );
       }
+    }
+  }
+
+  @Post()
+  @ApiOperation({
+    summary: 'Create new user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserDTO,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+  })
+  async createUser(@Body() input: CreateUserDTO): Promise<UserDTO> {
+    try {
+      const user = await this.userService.createUser(input);
+      return user;
+    } catch (error) {
+      this.logger.error('create user error with', { input, error });
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: INTERNAL_SERVER_ERROR_MSG,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        }
+      );
     }
   }
 }

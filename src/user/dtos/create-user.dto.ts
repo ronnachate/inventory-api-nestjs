@@ -11,7 +11,7 @@ export class CreateUserDTO {
 
   @ApiProperty()
   @IsNotEmpty()
-  @Length(6, 100)
+  @Length(2, 100)
   name: string;
 
   @ApiProperty()
