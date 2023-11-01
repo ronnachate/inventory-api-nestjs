@@ -4,7 +4,8 @@ import { UserRepository } from '../repositories/user.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
 import { NotFoundException } from '@nestjs/common';
 import { Equal, Not } from 'typeorm';
-import { USER_DELETED_STATUS } from '../../../src/shared/constant/generic';
+import { USER_ACTIVE_STATUS, USER_DELETED_STATUS } from '../../../src/shared/constant/generic';
+import e from 'express';
 
 describe('UserService', () => {
   let service: UserService;
@@ -12,6 +13,7 @@ describe('UserService', () => {
   const mockedRepository = {
     getById: jest.fn(),
     findAndCount: jest.fn(),
+    save: jest.fn(),
   };
 
   const user3 = {
@@ -116,6 +118,30 @@ describe('UserService', () => {
 
     afterEach(() => {
       jest.resetAllMocks();
+    });
+  });
+
+  describe('createUser', () => {
+    it('should return correct user with id and default status', async () => {
+      jest.spyOn(mockedRepository, 'save').mockImplementation(async (input) => {
+        input.id = 5;
+        return input;
+      });
+
+      const userInput = {
+        title: null,
+        name: 'user5',
+        lastname: null,
+        username: 'user5',
+      };
+
+      const result = await service.createUser(userInput);
+
+      expect(result.id).toEqual(5);
+      expect(result.name).toEqual(userInput.name);
+      expect(result.username).toEqual(userInput.username);
+      //set to active by default
+      expect(result.status.id).toEqual(USER_ACTIVE_STATUS);
     });
   });
 });

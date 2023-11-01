@@ -6,4 +6,8 @@ export class UserStatusDTO {
 
   @Expose()
   name: string;
+
+  constructor(id: number) {
+    this.id = id;
+  }
 }

@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../../shared/logger/logger.service';
 import { UserRepository } from '../repositories/user.repository';
-import { plainToInstance } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import { UserDTO } from '../dtos/user.dto';
 import { Equal, Not } from 'typeorm';
-import { USER_DELETED_STATUS } from '../../shared/constant/generic';
+import { USER_ACTIVE_STATUS, USER_DELETED_STATUS } from '../../shared/constant/generic';
+import { CreateUserDTO } from '../dtos/create-user.dto';
+import { User } from '../entities/user.entity';
+import { UserStatus } from '../entities/user.status.entity';
 
 @Injectable()
 export class UserService {
@@ -42,6 +45,19 @@ export class UserService {
     const user = await this.repository.getById(id);
 
     return plainToInstance(UserDTO, user, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  async createUser(
+    input: CreateUserDTO,
+  ): Promise<UserDTO> {
+
+    let user = plainToClass(User, input);
+    user.status = { id: USER_ACTIVE_STATUS } as UserStatus;
+    await this.repository.save(user);
+
+    return plainToClass(UserDTO, user, {
       excludeExtraneousValues: true,
     });
   }
