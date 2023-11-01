@@ -17,13 +17,13 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   title: string;
 
   @Column({ length: 100 })
   name: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   lastname: string;
 
   @Unique('username', ['username'])
