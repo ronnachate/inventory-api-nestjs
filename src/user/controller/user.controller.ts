@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { LoggerService } from '../../shared/logger/logger.service';
@@ -19,6 +20,8 @@ import { PaginationResultset } from '../../shared/dtos/pagination-resultset';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from '../dtos/create-user.dto';
+
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -42,6 +45,7 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
+  @UseGuards(JwtAuthGuard)
   async getUsers(
     @Query() query: UserPaginationParams
   ): Promise<PaginationResultset<UserDTO[]>> {

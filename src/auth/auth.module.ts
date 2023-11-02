@@ -24,6 +24,6 @@ import { STRATEGY_JWT_AUTH } from './constant/strategy';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService],
 })
 export class AuthModule {}
