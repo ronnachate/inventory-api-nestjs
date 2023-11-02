@@ -136,6 +136,7 @@ describe('UserService', () => {
         lastname: null,
         username: 'user5',
         password: 'password',
+        roles: []
       };
 
       const result = await service.createUser(userInput);
@@ -155,6 +156,7 @@ describe('UserService', () => {
         lastname: null,
         username: 'user5',
         password: 'password',
+        roles: []
       };
 
       await service.createUser(userInput);
