@@ -16,7 +16,7 @@ describe('AuthService', () => {
     validateLoginUser: jest.fn(),
   };
   const mockedConfigService = { get: jest.fn() };
-  const mockedJwtService = { signAsync: jest.fn() };
+  const mockedJwtService = { signAsync: jest.fn(), verifyAsync: jest.fn() };
 
   const authToken: AuthTokenDTO = {
     accessToken: 'random_access_token',
@@ -116,6 +116,33 @@ describe('AuthService', () => {
       };
 
       const result = await service.signIn(signInDto);
+
+      expect(service.getAuthToken).toBeCalledWith(payload);
+      expect(result).toEqual(authToken);
+    });
+  });
+
+  describe('refreshToken', () => {
+    it('should generate auth token or valid refresh token', async () => {
+      jest.spyOn(service, 'getAuthToken').mockImplementation(async () => authToken);
+
+      const refreshToken = 'random_refresh_token';
+      const decoded = {
+        sub: userDTO.id,
+        username: userDTO.username,
+        roles: userDTO.roles,
+      };
+      jest
+        .spyOn(mockedJwtService, 'verifyAsync')
+        .mockImplementation(async () => decoded);
+
+      const payload = {
+        username: userDTO.username,
+        sub: userDTO.id,
+        roles: userDTO.roles,
+      };
+
+      const result = await service.refreshToken(refreshToken);
 
       expect(service.getAuthToken).toBeCalledWith(payload);
       expect(result).toEqual(authToken);
