@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { ROLE } from '../../auth/constant/role.enum';
+import { ROLE } from '../constant/role.enum';
 
-export class LoginUserDTO {
+export class SigninUserDTO {
     @Expose()
     id: number;
     @Expose()
