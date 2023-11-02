@@ -1,6 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { UserStatusDTO } from './user.status.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { ROLE } from '../../auth/constant/role.enum';
 
 export class UserDTO {
   @ApiProperty()
@@ -22,6 +23,10 @@ export class UserDTO {
   @ApiProperty()
   @Expose()
   username: string;
+
+  @Expose()
+  @ApiProperty({ example: [ROLE.USER] })
+  roles: ROLE[];
 
   @ApiProperty()
   @Expose()

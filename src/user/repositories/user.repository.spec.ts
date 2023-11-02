@@ -42,10 +42,12 @@ describe('UserRepository', () => {
       name: 'User1',
       lastname: 'lastname1',
       username: 'user1',
+      passwordHash: 'passwordHash1',
       createdAt: currentDate,
       updatedAt: currentDate,
       status: null,
-      permission: null,
+      roles: [],
+
     };
 
     it('should call findOne with correct user id', () => {

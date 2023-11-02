@@ -6,12 +6,11 @@ import { UserService } from './service/user.service';
 import { UserRepository } from './repositories/user.repository';
 import { User } from './entities/user.entity';
 import { UserStatus } from './entities/user.status.entity';
-import { Permission } from './entities/permission.entity';
 
 @Module({
   imports: [
     SharedModule,
-    TypeOrmModule.forFeature([User, UserStatus, Permission]),
+    TypeOrmModule.forFeature([User, UserStatus]),
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository],
