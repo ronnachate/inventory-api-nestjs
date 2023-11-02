@@ -71,7 +71,7 @@ export class UserService {
     pass: string,
   ): Promise<UserDTO> {
     const user = await this.repository.findOne({ where: { username } });
-    if (!user) throw new UnauthorizedException();
+    if (!user || user.status.id == USER_DELETED_STATUS) throw new UnauthorizedException();
 
     const isValidPassword = await compare(pass, user.passwordHash);
     if (!isValidPassword) throw new UnauthorizedException();

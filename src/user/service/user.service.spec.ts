@@ -195,6 +195,22 @@ describe('UserService', () => {
       ).rejects.toThrowError();
     });
 
+    it('should throw not unauthorized when user found with deleted status', async () => {
+      const deleted = {
+        id: 6,
+        username: 'user6',
+        name: 'User num6',
+        status: { id: USER_DELETED_STATUS }
+      };
+      jest
+        .spyOn(mockedRepository, 'findOne')
+        .mockImplementation(async () => deleted);
+
+      await expect(
+        service.validateLoginUser('user', 'password'),
+      ).rejects.toThrowError();
+    });
+
     it('should throw not unauthorized exception when password is invalid', async () => {
       jest
         .spyOn(mockedRepository, 'findOne')
