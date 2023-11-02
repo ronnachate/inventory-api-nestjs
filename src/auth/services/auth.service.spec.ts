@@ -6,6 +6,8 @@ import { UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/service/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { SigninDTO } from '../dtos/signin.dto';
+import { AuthTokenDTO } from '../dtos/auth-token.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -13,10 +15,26 @@ describe('AuthService', () => {
   const mockedUserService = {
     validateLoginUser: jest.fn(),
   };
-
   const mockedConfigService = { get: jest.fn() };
   const mockedJwtService = { signAsync: jest.fn() };
 
+  const authToken: AuthTokenDTO = {
+    accessToken: 'random_access_token',
+    refreshToken: 'random_refresh_token',
+  };
+
+  const userDTO: UserDTO = {
+    id: 6,
+    title: 'Mr',
+    name: 'Jhon',
+    lastname: 'Doe',
+    username: 'jhon',
+    roles: [ROLE.USER],
+    status: { id: 1, name: 'Active' },
+    createdAt: '2021-07-01T00:00:00.000Z',
+    updatedAt: '2021-07-01T00:00:00.000Z',
+  };
+  
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,17 +53,6 @@ describe('AuthService', () => {
   });
 
   describe('validateUser', () => {
-    const userDTO: UserDTO = {
-      id: 6,
-      title: 'Mr',
-      name: 'Jhon',
-      lastname: 'Doe',
-      username: 'jhon',
-      roles: [ROLE.USER],
-      status: { id: 1, name: 'Active' },
-      createdAt: '2021-07-01T00:00:00.000Z',
-      updatedAt: '2021-07-01T00:00:00.000Z',
-    };
     it('should return user dto when username/password is valid', async () => {
       jest
         .spyOn(mockedUserService, 'validateLoginUser')
@@ -84,6 +91,34 @@ describe('AuthService', () => {
       await expect(
         service.validateUser('jhon', 'password')
       ).rejects.toThrowError(UnauthorizedException);
+    });
+  });
+
+  describe('signin', () => {
+    it('should return auth token for valid user', async () => {
+      jest.spyOn(service, 'getAuthToken').mockImplementation(async () => authToken);
+
+      jest
+        .spyOn(mockedUserService, 'validateLoginUser')
+        .mockImplementation(async () => ({
+          ...userDTO,
+          status: { id: 1, name: 'Active' },
+        }));
+
+      const signInDto: SigninDTO = {
+        username: 'jhon',
+        password: 'password',
+      }
+      const payload = {
+        username: userDTO.username,
+        sub: userDTO.id,
+        roles: userDTO.roles,
+      };
+
+      const result = await service.signIn(signInDto);
+
+      expect(service.getAuthToken).toBeCalledWith(payload);
+      expect(result).toEqual(authToken);
     });
   });
 
