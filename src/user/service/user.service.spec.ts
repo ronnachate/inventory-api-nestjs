@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { UserService } from './user.service';
 import { UserRepository } from '../repositories/user.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
@@ -14,6 +15,7 @@ describe('UserService', () => {
     getById: jest.fn(),
     findAndCount: jest.fn(),
     save: jest.fn(),
+    findOne: jest.fn(),
   };
 
   const user3 = {
@@ -133,6 +135,7 @@ describe('UserService', () => {
         name: 'user5',
         lastname: null,
         username: 'user5',
+        password: 'password',
       };
 
       const result = await service.createUser(userInput);
@@ -142,6 +145,64 @@ describe('UserService', () => {
       expect(result.username).toEqual(userInput.username);
       //set to active by default
       expect(result.status.id).toEqual(USER_ACTIVE_STATUS);
+    });
+
+    it('should encrypt password', async () => {
+      jest.spyOn(bcrypt, 'hash').mockImplementation(async () => 'passowrd_hash');
+      const userInput = {
+        title: null,
+        name: 'user5',
+        lastname: null,
+        username: 'user5',
+        password: 'password',
+      };
+
+      await service.createUser(userInput);
+      expect(bcrypt.hash).toBeCalledWith(userInput.password, 10);
+    });
+  });
+
+  describe('validateLoginUser', () => {
+
+    it('should return  user  when credentials are valid', async () => {
+      jest
+        .spyOn(mockedRepository, 'findOne')
+        .mockImplementation(async () => user3);
+
+      jest.spyOn(bcrypt, 'compare').mockImplementation(async () => true);
+
+      const result = await service.validateLoginUser(
+        'user',
+        'password',
+      );
+
+      expect(result).toEqual({
+        id: user3.id,
+        name: user3.name,
+        username: user3.username,
+      });
+    });
+
+    it('should throw not unauthorized when no username found', async () => {
+      jest
+        .spyOn(mockedRepository, 'findOne')
+        .mockImplementation(async () => null);
+
+      await expect(
+        service.validateLoginUser('user', 'password'),
+      ).rejects.toThrowError();
+    });
+
+    it('should throw not unauthorized exception when password is invalid', async () => {
+      jest
+        .spyOn(mockedRepository, 'findOne')
+        .mockImplementation(async () => user3);
+
+      jest.spyOn(bcrypt, 'compare').mockImplementation(async () => false);
+
+      await expect(
+        service.validateLoginUser('user', 'password'),
+      ).rejects.toThrowError();
     });
   });
 });

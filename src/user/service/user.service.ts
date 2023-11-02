@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { compare, hash } from 'bcrypt';
 import { LoggerService } from '../../shared/logger/logger.service';
 import { UserRepository } from '../repositories/user.repository';
 import { plainToClass, plainToInstance } from 'class-transformer';
@@ -8,6 +9,8 @@ import { USER_ACTIVE_STATUS, USER_DELETED_STATUS } from '../../shared/constant/g
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { User } from '../entities/user.entity';
 import { UserStatus } from '../entities/user.status.entity';
+
+const SALT_ROUNDS = 10;
 
 @Injectable()
 export class UserService {
@@ -54,6 +57,7 @@ export class UserService {
   ): Promise<UserDTO> {
 
     let user = plainToClass(User, input);
+    user.passwordHash = await hash(input.password, SALT_ROUNDS);
     user.status = { id: USER_ACTIVE_STATUS } as UserStatus;
     await this.repository.save(user);
 
@@ -61,4 +65,20 @@ export class UserService {
       excludeExtraneousValues: true,
     });
   }
+
+  async validateLoginUser(
+    username: string,
+    pass: string,
+  ): Promise<UserDTO> {
+    const user = await this.repository.findOne({ where: { username } });
+    if (!user) throw new UnauthorizedException();
+
+    const isValidPassword = await compare(pass, user.passwordHash);
+    if (!isValidPassword) throw new UnauthorizedException();
+
+    return plainToClass(UserDTO, user, {
+      excludeExtraneousValues: true,
+    });
+  }
+
 }
