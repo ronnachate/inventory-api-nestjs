@@ -150,7 +150,8 @@ describe('AuthService', () => {
   });
 
   describe('getAuthToken', () => {
-    const expiry = 100;
+    const accessTokenExpiry = '1h';
+    const refreshTokenExpiry = '1d';
     const user = { id: 5, username: 'username', roles: [ROLE.USER] };
 
     const payload = {
@@ -160,7 +161,18 @@ describe('AuthService', () => {
     };
 
     beforeEach(() => {
-      jest.spyOn(mockedConfigService, 'get').mockImplementation(() => expiry);
+      jest.spyOn(mockedConfigService, 'get').mockImplementation((key) => {
+        let value = null;
+        switch (key) {
+          case 'jwt.accessTokenExpiresIn':
+            value = accessTokenExpiry;
+            break;
+          case 'jwt.refreshTokenExpiresIn':
+            value = refreshTokenExpiry;
+            break;
+        }
+        return value;
+      });
 
       jest
         .spyOn(mockedJwtService, 'signAsync')
@@ -171,7 +183,7 @@ describe('AuthService', () => {
       const result = await service.getAuthToken(payload);
 
       expect(mockedJwtService.signAsync).toBeCalledWith(payload, {
-        expiresIn: expiry,
+        expiresIn: accessTokenExpiry,
       });
 
       expect(result).toMatchObject({
@@ -183,7 +195,7 @@ describe('AuthService', () => {
       const result = await service.getAuthToken(payload);
       const subject = { sub: payload.sub };
       expect(mockedJwtService.signAsync).toBeCalledWith(subject, {
-        expiresIn: expiry,
+        expiresIn: refreshTokenExpiry,
       });
 
       expect(result).toMatchObject({
