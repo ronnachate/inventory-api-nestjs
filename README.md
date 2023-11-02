@@ -1,6 +1,6 @@
 ## Description
 
-POS Rest api version with Nest, and TypeORM
+POS Rest api with Nest and TypeORM, including Jwt authentication with password.js
 
 ## Installation
 
