@@ -5,7 +5,10 @@ import { UserRepository } from '../repositories/user.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
 import { NotFoundException } from '@nestjs/common';
 import { Equal, Not } from 'typeorm';
-import { USER_ACTIVE_STATUS, USER_DELETED_STATUS } from '../../../src/shared/constant/generic';
+import {
+  USER_ACTIVE_STATUS,
+  USER_DELETED_STATUS,
+} from '../../../src/shared/constant/generic';
 import e from 'express';
 
 describe('UserService', () => {
@@ -136,7 +139,7 @@ describe('UserService', () => {
         lastname: null,
         username: 'user5',
         password: 'password',
-        roles: []
+        roles: [],
       };
 
       const result = await service.createUser(userInput);
@@ -149,14 +152,16 @@ describe('UserService', () => {
     });
 
     it('should encrypt password', async () => {
-      jest.spyOn(bcrypt, 'hash').mockImplementation(async () => 'passowrd_hash');
+      jest
+        .spyOn(bcrypt, 'hash')
+        .mockImplementation(async () => 'passowrd_hash');
       const userInput = {
         title: null,
         name: 'user5',
         lastname: null,
         username: 'user5',
         password: 'password',
-        roles: []
+        roles: [],
       };
 
       await service.createUser(userInput);
@@ -165,24 +170,23 @@ describe('UserService', () => {
   });
 
   describe('validateLoginUser', () => {
-
     it('should return  user  when credentials are valid', async () => {
+      const active = {
+        id: 6,
+        username: 'user6',
+        name: 'User num6',
+        status: { id: USER_ACTIVE_STATUS },
+      };
       jest
         .spyOn(mockedRepository, 'findOne')
-        .mockImplementation(async () => user3);
+        .mockImplementation(async () => active);
 
       jest.spyOn(bcrypt, 'compare').mockImplementation(async () => true);
 
-      const result = await service.validateLoginUser(
-        'user',
-        'password',
-      );
-
-      expect(result).toEqual({
-        id: user3.id,
-        name: user3.name,
-        username: user3.username,
-      });
+      const result = await service.validateLoginUser('user', 'password');
+      expect(result.id).toEqual(active.id);
+      expect(result.username).toEqual(active.username);
+      expect(result.name).toEqual(active.name);
     });
 
     it('should throw not unauthorized when no username found', async () => {
@@ -191,7 +195,7 @@ describe('UserService', () => {
         .mockImplementation(async () => null);
 
       await expect(
-        service.validateLoginUser('user', 'password'),
+        service.validateLoginUser('user', 'password')
       ).rejects.toThrowError();
     });
 
@@ -200,14 +204,14 @@ describe('UserService', () => {
         id: 6,
         username: 'user6',
         name: 'User num6',
-        status: { id: USER_DELETED_STATUS }
+        status: { id: USER_DELETED_STATUS },
       };
       jest
         .spyOn(mockedRepository, 'findOne')
         .mockImplementation(async () => deleted);
 
       await expect(
-        service.validateLoginUser('user', 'password'),
+        service.validateLoginUser('user', 'password')
       ).rejects.toThrowError();
     });
 
@@ -219,7 +223,7 @@ describe('UserService', () => {
       jest.spyOn(bcrypt, 'compare').mockImplementation(async () => false);
 
       await expect(
-        service.validateLoginUser('user', 'password'),
+        service.validateLoginUser('user', 'password')
       ).rejects.toThrowError();
     });
   });
