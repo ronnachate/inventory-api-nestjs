@@ -7,6 +7,9 @@ import { AuthService } from './services/auth.service';
 import { SharedModule } from '../shared/shared.module';
 import { UserModule } from '../user/user.module';
 import { STRATEGY_JWT_AUTH } from './constant/strategy';
+import { LocalStrategy } from './strategies/local-auth.strategy';
+import { JwtAuthStrategy } from './strategies/jwt-auth.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -24,6 +27,6 @@ import { STRATEGY_JWT_AUTH } from './constant/strategy';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtAuthStrategy, JwtRefreshStrategy],
 })
 export class AuthModule {}
