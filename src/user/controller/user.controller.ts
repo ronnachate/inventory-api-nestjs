@@ -24,7 +24,7 @@ import { CreateUserDTO } from '../dtos/create-user.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
-@Controller('users')
+@Controller('v1/users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(
