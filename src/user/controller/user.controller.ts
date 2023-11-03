@@ -28,6 +28,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @ApiTags('users')
 @Controller('v1/users')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(
@@ -48,7 +49,6 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.ADMIN)
   async getUsers(
     @Query() query: UserPaginationParams
@@ -91,7 +91,6 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.ADMIN)
   async getUser(@Param('id') id: number): Promise<UserDTO> {
     try {
@@ -138,7 +137,6 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.ADMIN)
   async createUser(@Body() input: CreateUserDTO): Promise<UserDTO> {
     try {
