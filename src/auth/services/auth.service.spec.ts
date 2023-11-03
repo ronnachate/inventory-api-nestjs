@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserDTO } from '../../user/dtos/user.dto';
 import { ROLE } from '../constant/role.enum';
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/service/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -123,10 +123,10 @@ describe('AuthService', () => {
   });
 
   describe('refreshToken', () => {
+    const refreshToken = 'random_refresh_token';
     it('should generate auth token or valid refresh token', async () => {
       jest.spyOn(service, 'getAuthToken').mockImplementation(async () => authToken);
 
-      const refreshToken = 'random_refresh_token';
       const decoded = {
         sub: userDTO.id,
         username: userDTO.username,
@@ -146,6 +146,20 @@ describe('AuthService', () => {
 
       expect(service.getAuthToken).toBeCalledWith(payload);
       expect(result).toEqual(authToken);
+    });
+  
+    it('should thrown unauthorized exception when verify refreshToken failed', async () => {
+      //json web token verifyAsync will throw JsonWebTokenError  when verify failed
+      //we dont need to check type of error here, just mock some error return
+      jest
+        .spyOn(mockedJwtService, 'verifyAsync')
+        .mockImplementation(() => {
+          throw new UnauthorizedException();
+        });
+
+      await expect(
+        service.refreshToken(refreshToken)
+      ).rejects.toThrowError(UnauthorizedException);
     });
   });
 
