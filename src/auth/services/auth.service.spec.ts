@@ -191,10 +191,9 @@ describe('AuthService', () => {
       });
     });
 
-    it('should generate refresh token with subject', async () => {
+    it('should generate refresh token with payload', async () => {
       const result = await service.getAuthToken(payload);
-      const subject = { sub: payload.sub };
-      expect(mockedJwtService.signAsync).toBeCalledWith(subject, {
+      expect(mockedJwtService.signAsync).toBeCalledWith(payload, {
         expiresIn: refreshTokenExpiry,
       });
 
