@@ -47,14 +47,18 @@ export class AuthService {
 
   //no validate exist user for refresh token here //TODO
   async refreshToken(refreshToken: string): Promise<AuthTokenDTO> {
-    const decoded = await this.jwtService.verifyAsync(refreshToken);
-    const payload = {
-      sub: decoded.sub,
-      username: decoded.username,
-      roles: decoded.roles,
-    };
+    try {
+      const decoded = await this.jwtService.verifyAsync(refreshToken);
+      const payload = {
+        sub: decoded.sub,
+        username: decoded.username,
+        roles: decoded.roles,
+      };
 
-    return this.getAuthToken(payload);
+      return this.getAuthToken(payload);
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 
   async getAuthToken(payload: any): Promise<AuthTokenDTO> {
