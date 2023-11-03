@@ -4,11 +4,13 @@ import { SigninDTO } from '../dtos/signin.dto';
 import { AuthTokenDTO } from '../dtos/auth-token.dto';
 import { AuthService } from '../services/auth.service';
 import { HttpException, UnauthorizedException } from '@nestjs/common';
+import { RefreshTokenDTO } from '../dtos/refresh-token.dto';
 
 describe('AuthController', () => {
   let authController: AuthController;
   const mockedAuthService = {
     signIn: jest.fn(() => null),
+    refreshToken: jest.fn(() => null),
   };
   const authToken: AuthTokenDTO = {
     accessToken: 'random_access_token',
@@ -51,6 +53,45 @@ describe('AuthController', () => {
       } catch (error) {
         expect(error.constructor).toBe(UnauthorizedException);
       }
+    });
+  });
+
+  describe('refreshToken', () => {
+    let refreshTokenInputDto: RefreshTokenDTO = {
+      refreshToken: 'refresh_token',
+    };
+    let authToken: AuthTokenDTO = {
+      accessToken: 'new_access_token',
+      refreshToken: 'new_refresh_token',
+    };
+
+    it('should generate refresh token', async () => {
+      jest
+      .spyOn(mockedAuthService, 'refreshToken')
+      .mockImplementation(async () => authToken);
+
+      const response = await authController.refreshToken(
+        refreshTokenInputDto,
+      );
+
+      expect(mockedAuthService.refreshToken).toBeCalledWith(refreshTokenInputDto.refreshToken);
+      expect(response).toEqual(authToken);
+    });
+
+    it('should return unauthorized exception when refresh token failed', async () => {
+      jest
+        .spyOn(mockedAuthService, 'refreshToken')
+        .mockRejectedValue(new UnauthorizedException());
+
+      try {
+        await authController.refreshToken(refreshTokenInputDto);
+      } catch (error) {
+        expect(error.constructor).toBe(UnauthorizedException);
+      }
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
   });
 });
