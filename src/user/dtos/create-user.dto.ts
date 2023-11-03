@@ -5,12 +5,6 @@ import { ROLE } from '../../auth/constant/role.enum';
 export class CreateUserDTO {
 
   @ApiProperty()
-  @IsOptional()
-  @IsString()
-  @Length(2, 50)
-  title: string;
-
-  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @Length(2, 100)

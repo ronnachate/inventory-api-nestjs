@@ -25,7 +25,6 @@ describe('AuthService', () => {
 
   const userDTO: UserDTO = {
     id: 6,
-    title: 'Mr',
     name: 'Jhon',
     lastname: 'Doe',
     username: 'jhon',

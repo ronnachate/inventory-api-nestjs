@@ -10,10 +10,6 @@ export class UserDTO {
 
   @ApiProperty()
   @Expose()
-  title: string;
-
-  @ApiProperty()
-  @Expose()
   name: string;
 
   @ApiProperty()
