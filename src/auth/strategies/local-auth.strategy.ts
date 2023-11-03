@@ -6,6 +6,7 @@ import { Strategy } from 'passport-local';
 import { STRATEGY_LOCAL } from '../constant/strategy';
 import { AuthService } from '../services/auth.service';
 import { SigninUserDTO } from '../dtos/signin.user.dto';
+import { IncomingMessage } from 'http';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, STRATEGY_LOCAL) {
@@ -21,6 +22,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, STRATEGY_LOCAL) {
   }
 
   async validate(
+    request: IncomingMessage,
     username: string,
     password: string,
   ): Promise<SigninUserDTO> {

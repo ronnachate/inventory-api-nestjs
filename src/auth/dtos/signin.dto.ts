@@ -5,7 +5,7 @@ export class SigninDTO {
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  @MaxLength(200)
+  @MaxLength(50)
   username: string;
 
   @IsNotEmpty()
