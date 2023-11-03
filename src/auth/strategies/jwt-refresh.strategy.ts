@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { STRATEGY_JWT_REFRESH } from '../constant/strategy';
-import { RefreshTokenDTO } from '../dtos/refresh-token.dto';
+import { SigninUserDTO } from '../dtos/signin.user.dto';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -18,7 +18,11 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: any): Promise<RefreshTokenDTO> {
-    return { id: payload.sub };
+  async validate(payload: any): Promise<SigninUserDTO> {
+    return {
+      id: payload.sub,
+      username: payload.username,
+      roles: payload.roles,
+    };
   }
 }

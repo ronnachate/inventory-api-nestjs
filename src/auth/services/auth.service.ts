@@ -58,12 +58,11 @@ export class AuthService {
   }
 
   async getAuthToken(payload: any): Promise<AuthTokenDTO> {
-    const subject = { sub: payload.sub };
     const authToken = {
       accessToken: await this.jwtService.signAsync(payload, {
         expiresIn: this.configService.get('jwt.accessTokenExpiresIn'),
       }),
-      refreshToken: await this.jwtService.signAsync(subject, {
+      refreshToken: await this.jwtService.signAsync(payload, {
         expiresIn: this.configService.get('jwt.refreshTokenExpiresIn'),
       }),
     };
