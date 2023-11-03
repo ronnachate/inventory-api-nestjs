@@ -3,7 +3,7 @@ import { AuthController } from './auth.controller';
 import { SigninDTO } from '../dtos/signin.dto';
 import { AuthTokenDTO } from '../dtos/auth-token.dto';
 import { AuthService } from '../services/auth.service';
-import { HttpException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { RefreshTokenDTO } from '../dtos/refresh-token.dto';
 
 describe('AuthController', () => {
