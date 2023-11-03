@@ -87,6 +87,7 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
+  @UseGuards(JwtAuthGuard)
   async getUser(@Param('id') id: number): Promise<UserDTO> {
     try {
       const user = await this.userService.getUserById(id);
@@ -132,6 +133,7 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
+  @UseGuards(JwtAuthGuard)
   async createUser(@Body() input: CreateUserDTO): Promise<UserDTO> {
     try {
       const user = await this.userService.createUser(input);
