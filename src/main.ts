@@ -9,8 +9,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
-    .setTitle('Inventory api')
-    .setDescription('The Inventory API description')
+    .setTitle('POS api')
+    .setDescription('The POS API description')
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
