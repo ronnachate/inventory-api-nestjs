@@ -22,6 +22,9 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { ROLE } from '../../auth/constant/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @ApiTags('users')
 @Controller('v1/users')
@@ -45,7 +48,8 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(ROLE.ADMIN)
   async getUsers(
     @Query() query: UserPaginationParams
   ): Promise<PaginationResultset<UserDTO[]>> {
@@ -87,7 +91,8 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(ROLE.ADMIN)
   async getUser(@Param('id') id: number): Promise<UserDTO> {
     try {
       const user = await this.userService.getUserById(id);
@@ -133,7 +138,8 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(ROLE.ADMIN)
   async createUser(@Body() input: CreateUserDTO): Promise<UserDTO> {
     try {
       const user = await this.userService.createUser(input);
