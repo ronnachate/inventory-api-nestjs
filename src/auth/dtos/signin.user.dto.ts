@@ -5,7 +5,7 @@ import { ROLE } from '../constant/role.enum';
 
 export class SigninUserDTO {
     @Expose()
-    id: number;
+    id: string;
     @Expose()
     username: string;
     @Expose()

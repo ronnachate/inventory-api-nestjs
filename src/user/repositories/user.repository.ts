@@ -9,7 +9,7 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async getById(id: number): Promise<User> {
+  async getById(id: string): Promise<User> {
     const user = await this.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException();

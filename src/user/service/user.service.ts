@@ -44,7 +44,7 @@ export class UserService {
     return { users: usersOutput, count };
   }
 
-  async getUserById(id: number): Promise<UserDTO> {
+  async getUserById(id: string): Promise<UserDTO> {
     const user = await this.repository.getById(id);
 
     return plainToInstance(UserDTO, user, {

@@ -1,7 +1,8 @@
-import { UserStatus } from "../src/user/entities/user.status.entity";
 import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class SeedUSerStatus1698907451244 implements MigrationInterface {
+import { UserStatus } from "../src/user/entities/user.status.entity";
+
+export class SeedUserStatus1699011166871 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         let statuses: UserStatus[] = [];
@@ -33,4 +34,5 @@ export class SeedUSerStatus1698907451244 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`DELETE * FROM user_statuses`);
     }
+
 }

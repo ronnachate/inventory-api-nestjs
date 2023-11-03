@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserDTO } from '../../user/dtos/user.dto';
 import { ROLE } from '../constant/role.enum';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/service/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -24,7 +24,7 @@ describe('AuthService', () => {
   };
 
   const userDTO: UserDTO = {
-    id: 6,
+    id: 'uuid',
     name: 'Jhon',
     lastname: 'Doe',
     username: 'jhon',

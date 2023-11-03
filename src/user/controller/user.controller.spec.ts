@@ -22,7 +22,7 @@ describe('UserController', () => {
 
   const currentDate = new Date();
   const user3 = {
-    id: 3,
+    id: 'uuid3',
     title: 'tiel',
     name: 'User3',
     username: 'user3',
@@ -33,7 +33,7 @@ describe('UserController', () => {
   };
 
   const user4 = {
-    id: 4,
+    id: 'uuid4',
     title: 'title',
     name: 'User4',
     username: 'user4',
@@ -114,7 +114,7 @@ describe('UserController', () => {
         new InternalServerErrorException()
       );
       try {
-        await controller.getUser(1);
+        await controller.getUser('some_uuid');
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
@@ -128,7 +128,7 @@ describe('UserController', () => {
         new NotFoundException()
       );
       try {
-        await controller.getUser(1);
+        await controller.getUser('some_uuid');
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;

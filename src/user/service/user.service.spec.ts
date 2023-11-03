@@ -22,13 +22,13 @@ describe('UserService', () => {
   };
 
   const user3 = {
-    id: 3,
+    id: 'uuid3',
     username: 'user3',
     name: 'User num3',
   };
 
   const user4 = {
-    id: 4,
+    id: 'uuid4',
     username: 'user4',
     name: 'User num4',
   };
@@ -115,7 +115,7 @@ describe('UserService', () => {
     it('throw not found exception if no user with given id found', async () => {
       mockedRepository.getById.mockRejectedValue(new NotFoundException());
       try {
-        await service.getUserById(5);
+        await service.getUserById('some_uuid');
       } catch (error) {
         expect(error.constructor).toBe(NotFoundException);
       }
@@ -172,7 +172,7 @@ describe('UserService', () => {
   describe('validateLoginUser', () => {
     it('should return  user  when credentials are valid', async () => {
       const active = {
-        id: 6,
+        id: 'uuid6',
         username: 'user6',
         name: 'User num6',
         status: { id: USER_ACTIVE_STATUS },
@@ -201,7 +201,7 @@ describe('UserService', () => {
 
     it('should throw not unauthorized when user found with deleted status', async () => {
       const deleted = {
-        id: 6,
+        id: 'delete_uuid',
         username: 'user6',
         name: 'User num6',
         status: { id: USER_DELETED_STATUS },

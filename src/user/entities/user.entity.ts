@@ -12,8 +12,8 @@ import { UserStatus } from './user.status.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 50, nullable: true })
   title: string;

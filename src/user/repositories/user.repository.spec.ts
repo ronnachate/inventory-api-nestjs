@@ -34,7 +34,7 @@ describe('UserRepository', () => {
 
   describe('Get user by id', () => {
     const currentDate = new Date();
-    const id = 1;
+    const id = 'some_uuid';
 
     const expectedOutput: User = {
       id,
