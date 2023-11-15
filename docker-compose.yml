@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: inventory-api
+    container_name: pos-api
     environment:
       - PORT=${PORT}
       - DB_HOST=postgresdb
