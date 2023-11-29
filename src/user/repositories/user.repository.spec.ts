@@ -38,7 +38,6 @@ describe('UserRepository', () => {
 
     const expectedOutput: User = {
       id,
-      title: 'title1',
       name: 'User1',
       lastname: 'lastname1',
       username: 'user1',
