@@ -49,7 +49,7 @@ export class CategoryController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async getCategories(
     @Query() query: CategoryPaginationParams
   ): Promise<PaginationResultset<CategoryDTO[]>> {
@@ -90,7 +90,7 @@ export class CategoryController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async getCategory(@Param('id') id: number): Promise<CategoryDTO> {
     try {
       const category = await this.categoryService.getCategoryById(id);
@@ -136,7 +136,7 @@ export class CategoryController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async createCategory(@Body() input: NewCategoryDTO): Promise<CategoryDTO> {
     try {
       const category = await this.categoryService.newCategory(input);

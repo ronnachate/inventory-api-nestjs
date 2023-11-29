@@ -49,7 +49,7 @@ export class ProductController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async getProducts(
     @Query() query: ProductPaginationParams
   ): Promise<PaginationResultset<ProductDTO[]>> {
@@ -92,7 +92,7 @@ export class ProductController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async getProduct(@Param('id') id: number): Promise<ProductDTO> {
     try {
       const product = await this.productService.getProductById(id);
@@ -138,7 +138,7 @@ export class ProductController {
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
-  @Roles(ROLE.ADMIN)
+  @Roles(ROLE.USER)
   async createProduct(@Body() input: NewProductDTO): Promise<ProductDTO> {
     try {
       const product = await this.productService.newProduct(input);
