@@ -13,58 +13,56 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { LoggerService } from '../../shared/logger/logger.service';
-import { ProductService } from '../service/product.service';
-import { ProductDTO } from '../dtos/product.dto';
-import { ProductPaginationParams } from '../query-params/product-pagination-params';
+import { CategoryService } from '../service/category.service';
+import { CategoryDTO } from '../dtos/category.dto';
+import { CategoryPaginationParams } from '../query-params/category-pagination-params';
 import { PaginationResultset } from '../../shared/dtos/pagination-resultset';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { NewProductDTO } from '../dtos/new-product.dto';
+import { NewCategoryDTO } from '../dtos/new-category.dto';
 
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { ROLE } from '../../auth/constant/role.enum';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 
-@ApiTags('products')
-@Controller('v1/products')
+@ApiTags('categories')
+@Controller('v1/categories')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
-export class ProductController {
+export class CategoryController {
   constructor(
-    private readonly productService: ProductService,
+    private readonly categoryService: CategoryService,
     private readonly logger: LoggerService
   ) {
-    this.logger.setContext(ProductController.name);
+    this.logger.setContext(CategoryController.name);
   }
 
   @Get()
   @ApiOperation({
-    summary: 'Get products with pagination',
+    summary: 'Get categories with pagination',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: PaginationResultset<ProductDTO[]>,
+    type: PaginationResultset<CategoryDTO[]>,
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
   @Roles(ROLE.ADMIN)
-  async getProducts(
-    @Query() query: ProductPaginationParams
-  ): Promise<PaginationResultset<ProductDTO[]>> {
+  async getCategories(
+    @Query() query: CategoryPaginationParams
+  ): Promise<PaginationResultset<CategoryDTO[]>> {
     try {
       const { page = 1, rows = 10 } = query;
-      const { products, count } = await this.productService.getProducts(
+      const { categories, count } = await this.categoryService.getCategories(
         page,
-        rows,
-        query.status,
-        query.category
+        rows
       );
 
-      return { items: products, pagination: { page, rows, count } };
+      return { items: categories, pagination: { page, rows, count } };
     } catch (error) {
-      this.logger.error('getProducts error with', query);
+      this.logger.error('getCategories error with', query);
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -80,11 +78,11 @@ export class ProductController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get product by id',
+    summary: 'Get category by id',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ProductDTO,
+    type: CategoryDTO,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -93,10 +91,10 @@ export class ProductController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
   @Roles(ROLE.ADMIN)
-  async getProduct(@Param('id') id: number): Promise<ProductDTO> {
+  async getCategory(@Param('id') id: number): Promise<CategoryDTO> {
     try {
-      const product = await this.productService.getProductById(id);
-      return product;
+      const category = await this.categoryService.getCategoryById(id);
+      return category;
     } catch (error: any) {
       if (error instanceof NotFoundException) {
         throw new HttpException(
@@ -109,7 +107,7 @@ export class ProductController {
           }
         );
       } else {
-        this.logger.error(`getProducts error with id "${id}"`, error);
+        this.logger.error(`getCategorys error with id "${id}"`, error);
         throw new HttpException(
           {
             status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -126,11 +124,11 @@ export class ProductController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create new product',
+    summary: 'Create new category',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ProductDTO,
+    type: CategoryDTO,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -139,12 +137,12 @@ export class ProductController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
   })
   @Roles(ROLE.ADMIN)
-  async createProduct(@Body() input: NewProductDTO): Promise<ProductDTO> {
+  async createCategory(@Body() input: NewCategoryDTO): Promise<CategoryDTO> {
     try {
-      const product = await this.productService.newProduct(input);
-      return product;
+      const category = await this.categoryService.newCategory(input);
+      return category;
     } catch (error) {
-      this.logger.error('create product error with', { input, error });
+      this.logger.error('create category error with', { input, error });
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,

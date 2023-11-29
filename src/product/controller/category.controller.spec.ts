@@ -1,37 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from './product.controller';
-import { ProductService } from '../service/product.service';
+import { CategoryController } from './category.controller';
+import { CategoryService } from '../service/category.service';
 import { LoggerService } from '../../shared/logger/logger.service';
-import { ProductPaginationParams } from '../query-params/product-pagination-params';
+import { CategoryPaginationParams } from '../query-params/category-pagination-params';
 import {
   HttpException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { INTERNAL_SERVER_ERROR_MSG } from '../../shared/constant/generic';
-import { NewProductDTO } from '../dtos/new-product.dto';
+import { NewCategoryDTO } from '../dtos/new-category.dto';
 
-describe('ProductController', () => {
-  let controller: ProductController;
-  const mockedProductService = {
-    getProducts: jest.fn(),
-    getProductById: jest.fn(),
-    newProduct: jest.fn(),
+describe('CategoryController', () => {
+  let controller: CategoryController;
+  const mockedCategoryService = {
+    getCategories: jest.fn(),
+    getCategoryById: jest.fn(),
+    newCategory: jest.fn(),
   };
   const mockedLogger = { setContext: jest.fn(), error: jest.fn() };
 
   const currentDate = new Date();
-  const product3 = {
+  const category3 = {
     id: 3,
-    name: 'Product3',
+    name: 'Category3',
     createdAt: currentDate.toISOString(),
     updatedAt: currentDate.toISOString(),
     status: null,
   };
 
-  const product4 = {
+  const category4 = {
     id: 4,
-    name: 'Product4',
+    name: 'Category4',
     createdAt: currentDate.toISOString(),
     updatedAt: currentDate.toISOString(),
     status: null,
@@ -39,57 +39,52 @@ describe('ProductController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ProductController],
+      controllers: [CategoryController],
       providers: [
-        { provide: ProductService, useValue: mockedProductService },
+        { provide: CategoryService, useValue: mockedCategoryService },
         { provide: LoggerService, useValue: mockedLogger },
       ],
     }).compile();
 
-    controller = module.get<ProductController>(ProductController);
+    controller = module.get<CategoryController>(CategoryController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('get Products as a list', () => {
+  describe('get Categories as a list', () => {
     const page = 1;
     const rows = 10;
     const resultCount = 2;
-    const query: ProductPaginationParams = {
+    const query: CategoryPaginationParams = {
       page: page,
-      rows: rows,
-      status: undefined,
-      category: undefined,
+      rows: rows
     };
 
-    it('should call getProducts function', () => {
-      mockedProductService.getProducts.mockResolvedValue({
-        products: [],
-        count: 0,
-      });
-      controller.getProducts(query);
-      expect(mockedProductService.getProducts).toHaveBeenCalled();
+    it('should call getCategories function', () => {
+      mockedCategoryService.getCategories.mockResolvedValue({ categories: [], count: 0 });
+      controller.getCategories(query);
+      expect(mockedCategoryService.getCategories).toHaveBeenCalled();
     });
 
     it('should return correct result', async () => {
       const pagination = { page: page, rows: rows, count: resultCount };
-      mockedProductService.getProducts.mockResolvedValue({
-        products: [product3, product4],
+      mockedCategoryService.getCategories.mockResolvedValue({
+        categories: [category3, category4],
         count: resultCount,
       });
-      var result = await controller.getProducts(query);
-      expect(result.items).toEqual([product3, product4]);
+      var result = await controller.getCategories(query);
+      expect(result.items).toEqual([category3, category4]);
       expect(result.pagination).toEqual(pagination);
     });
 
     it('should thrown error with generic internal error msg', async () => {
-      mockedProductService.getProducts.mockRejectedValue(
+      mockedCategoryService.getCategories.mockRejectedValue(
         new InternalServerErrorException()
       );
       try {
-        await controller.getProducts(query);
+        await controller.getCategories(query);
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
@@ -99,22 +94,20 @@ describe('ProductController', () => {
     });
   });
 
-  describe('Get product by id', () => {
-    it('should return correct product', async () => {
-      mockedProductService.getProductById.mockResolvedValue(product3);
+  describe('Get category by id', () => {
+    it('should return correct category', async () => {
+      mockedCategoryService.getCategoryById.mockResolvedValue(category3);
 
-      expect(await controller.getProduct(product3.id)).toEqual(product3);
-      expect(mockedProductService.getProductById).toHaveBeenCalledWith(
-        product3.id
-      );
+      expect(await controller.getCategory(category3.id)).toEqual(category3);
+      expect(mockedCategoryService.getCategoryById).toHaveBeenCalledWith(category3.id);
     });
 
     it('should thrown error with generic internal error msg', async () => {
-      mockedProductService.getProductById.mockRejectedValue(
+      mockedCategoryService.getCategoryById.mockRejectedValue(
         new InternalServerErrorException()
       );
       try {
-        await controller.getProduct(1);
+        await controller.getCategory(1);
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
@@ -124,11 +117,11 @@ describe('ProductController', () => {
     });
 
     it('should thrown error 404 when service thrown NotFoundException', async () => {
-      mockedProductService.getProductById.mockRejectedValue(
+      mockedCategoryService.getCategoryById.mockRejectedValue(
         new NotFoundException()
       );
       try {
-        await controller.getProduct(1);
+        await controller.getCategory(1);
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
@@ -137,23 +130,23 @@ describe('ProductController', () => {
     });
   });
 
-  describe('New product', () => {
-    const input = new NewProductDTO();
-    it('New product should return corect product', async () => {
-      const productDto = {
-        name: 'product5',
+  describe('New category', () => {
+    const input = new NewCategoryDTO();
+    it('New category should return corect category', async () => {
+      const categoryDto = {
+        name: 'category5',
       };
-      mockedProductService.newProduct.mockResolvedValue(productDto);
+      mockedCategoryService.newCategory.mockResolvedValue(categoryDto);
 
-      expect(await controller.createProduct(input)).toEqual(productDto);
+      expect(await controller.createCategory(input)).toEqual(categoryDto);
     });
 
     it('should thrown error with generic internal error msg', async () => {
-      mockedProductService.newProduct.mockRejectedValue(
+      mockedCategoryService.newCategory.mockRejectedValue(
         new InternalServerErrorException()
       );
       try {
-        await controller.createProduct(input);
+        await controller.createCategory(input);
       } catch (error) {
         expect(error.constructor).toBe(HttpException);
         var errorResponse = error.response;
