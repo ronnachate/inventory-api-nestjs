@@ -21,7 +21,8 @@ export class ProductService {
   async getProducts(
     page: number,
     rows: number,
-    status?: number
+    status?: number,
+    category?: number,
   ): Promise<{ products: ProductDTO[]; count: number }> {
     let offset = (page - 1) * rows;
     let filters = {
@@ -31,6 +32,9 @@ export class ProductService {
     };
     if (status) {
       filters.where.status = Equal(status);
+    }
+    if (category) {
+      filters.where['category'] = Equal(category);
     }
     const [products, count] = await this.repository.findAndCount(filters);
 

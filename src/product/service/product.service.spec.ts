@@ -121,7 +121,7 @@ describe('ProductService', () => {
     });
   });
 
-  describe('createProduct', () => {
+  describe('newProduct', () => {
     it('should return correct product with id and default status', async () => {
       jest.spyOn(mockedRepository, 'save').mockImplementation(async (input) => {
         input.id = 5;
