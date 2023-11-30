@@ -46,6 +46,7 @@ describe('ProductRepository', () => {
       imagePath: 'imagePath1',
       options: [],
       addons: [],
+      saleItems: [],
       category: null,
     };
 

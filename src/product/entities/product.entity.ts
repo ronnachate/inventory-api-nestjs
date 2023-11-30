@@ -13,6 +13,7 @@ import { ProductStatus } from './product.status.entity';
 import { ProductOption } from './product.option.entity';
 import { Category } from './category.entity';
 import { ProductAddon } from './product.addon.entity';
+import { SaleOrderItem } from '../../sale/entities/sale.order.item.entity';
 
 @Entity('products')
 export class Product {
@@ -46,6 +47,9 @@ export class Product {
     eager: true,
   })
   category: Category;
+
+  @OneToMany(() => SaleOrderItem, (item) => item.product)
+  saleItems: SaleOrderItem[];
 
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   createdAt: Date;
