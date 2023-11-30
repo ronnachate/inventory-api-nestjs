@@ -21,6 +21,9 @@ export class PriceRate {
   @Column({ length: 100 })
   name: string;
 
+  @Column({ length: 255 })
+  description: string;
+
   @OneToMany(() => ProductPriceRate, (productRate) => productRate.rate)
   productPriceRates: ProductPriceRate[];
 

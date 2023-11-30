@@ -39,6 +39,7 @@ describe('PriceRateRepository', () => {
       id,
       statusId: 1,
       name: 'PriceRate1',
+      description: 'description1',
       createdAt: currentDate,
       updatedAt: currentDate,
       orders: [],
