@@ -37,6 +37,7 @@ describe('PriceRateRepository', () => {
 
     const expectedOutput: PriceRate = {
       id,
+      statusId: 1,
       name: 'PriceRate1',
       createdAt: currentDate,
       updatedAt: currentDate,

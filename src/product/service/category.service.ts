@@ -5,8 +5,8 @@ import { plainToClass, plainToInstance } from 'class-transformer';
 import { CategoryDTO } from '../dtos/category.dto';
 import { Not } from 'typeorm';
 import {
-  CATEGORY_ACTIVE_STATUS,
-  CATEGORY_DELETED_STATUS,
+  GENERIC_USING_STATUS,
+  GENERIC_DELETED_STATUS,
 } from '../../shared/constant/generic';
 import { NewCategoryDTO } from '../dtos/new-category.dto';
 import { Category } from '../entities/category.entity';
@@ -26,7 +26,7 @@ export class CategoryService {
   ): Promise<{ categories: CategoryDTO[]; count: number }> {
     let offset = (page - 1) * rows;
     let filters = {
-      where: { statusId: Not(CATEGORY_DELETED_STATUS) },
+      where: { statusId: Not(GENERIC_DELETED_STATUS) },
       take: rows,
       skip: offset,
     };
@@ -49,7 +49,7 @@ export class CategoryService {
 
   async newCategory(input: NewCategoryDTO): Promise<CategoryDTO> {
     let category = plainToClass(Category, input);
-    category.statusId = CATEGORY_ACTIVE_STATUS;
+    category.statusId = GENERIC_USING_STATUS;
     await this.repository.save(category);
 
     return plainToClass(CategoryDTO, category, {

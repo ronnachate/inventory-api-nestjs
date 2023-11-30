@@ -3,12 +3,10 @@ import { CategoryService } from './category.service';
 import { CategoryRepository } from '../repositories/category.repository';
 import { LoggerService } from '../../../src/shared/logger/logger.service';
 import { NotFoundException } from '@nestjs/common';
-import { Equal, Not } from 'typeorm';
+import { Not } from 'typeorm';
 import {
-  CATEGORY_ACTIVE_STATUS,
-  CATEGORY_DELETED_STATUS,
-  PRODUCT_ACTIVE_STATUS,
-  PRODUCT_DELETED_STATUS,
+  GENERIC_USING_STATUS,
+  GENERIC_DELETED_STATUS,
 } from '../../../src/shared/constant/generic';
 
 describe('CategoryService', () => {
@@ -64,7 +62,7 @@ describe('CategoryService', () => {
       await service.getCategories(page, rows);
       let offset = (page - 1) * rows;
       let expectedFilter = {
-        where: { statusId: Not(CATEGORY_DELETED_STATUS) },
+        where: { statusId: Not(GENERIC_DELETED_STATUS) },
         take: rows,
         skip: offset,
       };
@@ -127,7 +125,7 @@ describe('CategoryService', () => {
       expect(result.id).toEqual(5);
       expect(result.name).toEqual(categoryInput.name);
       //set to active by default
-      expect(result.statusId).toEqual(CATEGORY_ACTIVE_STATUS);
+      expect(result.statusId).toEqual(GENERIC_USING_STATUS);
     });
   });
 });

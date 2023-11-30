@@ -15,6 +15,9 @@ export class PriceRate {
   @PrimaryGeneratedColumn()
   id: number;
 
+  //1 active, 2 deleted
+  statusId: number;
+
   @Column({ length: 100 })
   name: string;
 
