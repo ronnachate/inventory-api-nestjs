@@ -14,6 +14,7 @@ export class Category {
   @Column({ length: 255 })
   description: string;
 
+  //using =1, deleted = 2
   statusId: number;
 
   @OneToMany(() => Product, (product) => product.status)
