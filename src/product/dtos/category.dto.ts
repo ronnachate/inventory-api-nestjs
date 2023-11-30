@@ -8,6 +8,9 @@ export class CategoryDTO {
   name: string;
 
   @Expose()
+  description: string;
+
+  @Expose()
   statusId: number;
 
   constructor(name: string) {
