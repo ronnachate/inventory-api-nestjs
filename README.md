@@ -1,6 +1,6 @@
 ## Description
 
-POS Rest api with Nest and TypeORM, including Jwt authentication with password.js
+Restourant POS Rest api with Nest and TypeORM, including Jwt authentication with password.js
 
 ## Installation
 
