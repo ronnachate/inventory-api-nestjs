@@ -20,7 +20,7 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Unique('name', ['name'])
+  @Unique('productName', ['name'])
   @Column({ length: 150 })
   name: string;
 
