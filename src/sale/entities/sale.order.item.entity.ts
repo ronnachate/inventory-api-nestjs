@@ -36,9 +36,7 @@ export class SaleOrderItem {
   //selected addon snapshort
   addonJson: string;
 
-  @ManyToOne(() => SaleOrder, (order) => order.status, {
-    eager: true,
-  })
+  @ManyToOne(() => SaleOrder, (order) => order.status)
   order: SaleOrder;
 
   @ManyToOne(() => Product, (product) => product.saleItems, {

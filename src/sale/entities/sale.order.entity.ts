@@ -32,7 +32,9 @@ export class SaleOrder {
 
   netPrice: number;
 
-  @OneToMany(() => SaleOrderItem, (item) => item.order)
+  @OneToMany(() => SaleOrderItem, (item) => item.order, {
+    eager: true,
+  })
   items: SaleOrderItem[];
 
   @ManyToOne(() => SaleOrderStatus, (status) => status.orders, {
