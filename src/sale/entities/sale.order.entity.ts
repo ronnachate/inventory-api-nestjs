@@ -53,6 +53,8 @@ export class SaleOrder {
   @Column({ length: 150 })
   note: string;
 
+  sellerId: number | null;
+
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   createdAt: Date;
 

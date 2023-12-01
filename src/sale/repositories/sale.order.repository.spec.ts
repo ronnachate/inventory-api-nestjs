@@ -50,6 +50,7 @@ describe('SaleOrderRepository', () => {
       totalPrice: 0,
       createdAt: currentDate,
       updatedAt: currentDate,
+      sellerId: null,
       note: '',
     };
 
